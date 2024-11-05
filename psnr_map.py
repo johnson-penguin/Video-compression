@@ -22,7 +22,7 @@ def calculate_psnr_map(img1, img2):
 
 # 載入圖片
 image1 = cv2.imread('penguin.jpg')
-image2 = cv2.imread('hdr_to_sdr_image.jpg')
+image2 = cv2.imread('hdr_hlg_image.tiff')
 
 # 確保兩張圖片大小相同
 if image1.shape == image2.shape:

@@ -1,12 +1,15 @@
 import cv2
 import numpy as np
 
+
 def hlg_oetf(x):
     """HLG OETF (Opto-Electronic Transfer Function)"""
     a = 0.17883277
     b = 0.28466892
     c = 0.55991073
-    return np.where(x <= 1/12, np.sqrt(3 * x), a * np.log(12 * x - b) + c)
+    # 使用 np.clip 避免無效值
+    return np.where(x <= 1/12, np.sqrt(3 * x), a * np.log(np.clip(12 * x - b, 1e-10, None)) + c)
+
 
 def hlg_inverse_oetf(x):
     """HLG inverse OETF"""
@@ -34,7 +37,7 @@ sdr_normalized = sdr_image.astype(np.float32) / 255.0
 mean_luminance = np.mean(sdr_normalized)
 
 # 自適應增益調整
-gain = 1.2 + 0.8 * (1 - mean_luminance)  # 根據平均亮度調整增益
+gain = 0.45 + 0.3 * (1 - mean_luminance)  # 根據平均亮度調整增益
 max_luminance = 1000.0  # HDR 的最大亮度 (nits)
 
 # 應用 sRGB 逆伽瑪校正（假設輸入是 sRGB）

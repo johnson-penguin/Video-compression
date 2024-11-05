@@ -34,9 +34,9 @@ def ssim(A, B, c1=1/math.sqrt(255), c2=1/math.sqrt(255),l=255):
     return ssim_map.mean(), ssim_map
 
 def main():
-    A = cv2.imread('hdr_hlg_image.tiff', cv2.IMREAD_GRAYSCALE)
-    B = cv2.imread('hdr_pq_image.tiff', cv2.IMREAD_GRAYSCALE)
-    
+    A = cv2.imread('penguin.jpg', cv2.IMREAD_GRAYSCALE)
+    B = cv2.imread('hdr_hlg_image.tiff', cv2.IMREAD_GRAYSCALE)
+
     if A.shape != B.shape:
         raise ValueError("Input images must have the same dimensions.")
     
