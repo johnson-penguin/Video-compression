@@ -17,7 +17,7 @@ def ssim(A, B, c1=1/math.sqrt(255), c2=1/math.sqrt(255),l=255):
     A = A.astype(np.float64)
     B = B.astype(np.float64)
 
-    kernel = gaussian_kernel(22, 3)
+    kernel = gaussian_kernel(11, 1.5) #降低高斯核
 
     muA = filter2d(A, kernel)
     muB = filter2d(B, kernel)
@@ -48,11 +48,30 @@ def calculate_color_ssim(A_color, B_color):
 
 def main():
     A_color = cv2.imread('penguin.jpg', cv2.IMREAD_COLOR)
-    B_color = cv2.imread('hdr_hlg_image.tiff', cv2.IMREAD_COLOR)
+    # B_color = cv2.imread('hdr_hlg_image.tiff', cv2.IMREAD_COLOR)
+    B_color = cv2.imread('hdr_pq_image.tiff', cv2.IMREAD_UNCHANGED)
+
+    # IMREAD_COLOR for uint8
+    # IMREAD_UNCHANGED for uint16
+
+    print("原始 SDR 圖像:")
+    print("Data Type:", A_color.dtype)
+    print("Shape:", A_color.shape)
+
+    print("原始 HDR 圖像:")
+    print("Data Type:", B_color.dtype)
+    print("Shape:", B_color.shape)
 
     if A_color.shape != B_color.shape:
         raise ValueError("Input images must have the same dimensions.")
     
+    # 读取16位图像后进行归一化
+    A_color = A_color.astype(np.float32) / 255.0  # 原始SDR图像通常是8位
+    B_color = B_color.astype(np.float32) / 65535.0  # HDR图像是16位
+
+
+
+
     # Calculate SSIM for color images
     color_ssim_value, ssim_map_color = calculate_color_ssim(A_color, B_color)
     print(f'SSIM (Color): {color_ssim_value}')

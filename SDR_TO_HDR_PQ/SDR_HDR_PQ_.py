@@ -41,35 +41,19 @@ print("Shape:", sdr_image.shape)
 
 # Step 1: 增加色彩飽和度
 hsv_image = cv2.cvtColor(sdr_image, cv2.COLOR_BGR2HSV).astype(np.float32) / 255.0
-hsv_image[:, :, 1] *= 1.2  # 增加飽和度
 hsv_image = np.clip(hsv_image, 0, 1)  # 確保範圍在 [0, 1]
 sdr_image_enhanced = cv2.cvtColor((hsv_image * 255).astype(np.uint8), cv2.COLOR_HSV2BGR)
 
-# Step 2: 銳化處理(用於防止過度模糊)
-kernel = np.array([[0, -1, 0],
-                   [-1, 5, -1],
-                   [0, -1, 0]])
-sdr_contrast_enhanced = sdr_sharpened = cv2.filter2D(sdr_image_enhanced, -1, kernel)
-
-# # Step 3: 對比度增強
-# lab = cv2.cvtColor(sdr_sharpened, cv2.COLOR_BGR2Lab)
-# clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8))
-# lab[:, :, 0] = clahe.apply(lab[:, :, 0])
-# sdr_contrast_enhanced = cv2.cvtColor(lab, cv2.COLOR_Lab2BGR)
-
-
-
-
-
 # 將 SDR 圖像轉換為浮點數並歸一化到 [0, 1] 範圍
-sdr_normalized = sdr_contrast_enhanced.astype(np.float32) / 255.0
+sdr_normalized = sdr_image_enhanced.astype(np.float32) / 255.0
 
 # 計算圖像的平均亮度
 mean_luminance = np.mean(sdr_normalized)
 
 # 自適應伽瑪值
-gamma = 5.5 # 使用標準 sRGB 伽瑪值
-max_luminance = 10000.0  # HDR 的最大亮度 (nits)
+gamma = 2.5 if mean_luminance < 0.5 else 2.2
+ # 使用標準 sRGB 伽瑪值
+max_luminance = 1000.0  # HDR 的最大亮度 (nits)
 
 # 應用伽瑪校正和亮度映射
 hdr_linear = np.power(sdr_normalized, gamma) * max_luminance
