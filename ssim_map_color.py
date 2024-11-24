@@ -50,6 +50,7 @@ def main():
     A_color = cv2.imread('penguin.jpg', cv2.IMREAD_COLOR)
     # B_color = cv2.imread('hdr_hlg_image.tiff', cv2.IMREAD_COLOR)
     B_color = cv2.imread('hdr_pq_image.tiff', cv2.IMREAD_UNCHANGED)
+    # B_color = cv2.imread('hdr_hlg_image.tiff', cv2.IMREAD_UNCHANGED)
 
     # IMREAD_COLOR for uint8
     # IMREAD_UNCHANGED for uint16
